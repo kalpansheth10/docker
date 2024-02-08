@@ -1,0 +1,115 @@
+//download all updates
+2. sudo apt-get update
+
+3.//install packages to allow apt to use a remote repo over https:
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+4.//add docker files official gpg key
+sudo mkdir -p /etc/apt/keyrings
+
+//getting gpg and putting it in the file
+5.curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+
+6.
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+7.sudo apt-get update
+
+8. Install Docker Engine.
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+9. //Start docker
+sudo systemctl start docker
+
+10.//enable docker
+sudo systemctl enable docker
+
+11.//check docker status..should be running
+sudo systemctl status docker
+
+12.//Identify the user id of user that will run container. want to run commands without sudo or root.
+id
+13.// Add above user to docker group 
+sudo usermod -aG docker kalpansheth
+
+10. Logout and log back in and check if user has group docker assigned
+
+11. Check Docker Version
+docker --version
+
+docker --help
+
+docker container ls
+
+12.//launch ubuntu container in detached mode. base image is ubuntu itself
+docker run -dt ubuntu bash
+pulled the latest ubuntu image and it is STORED locally
+
+13.docker ps -a or docker container ls -a
+ 
+containers/images
+
+--both client and docker_host = both server and client we will run our commands.
+when you want to create a container you run command
+docker run <command>
+will check for image locally and if not found go to docker registry and then create containers
+
+--container is a running instance of an image. think of image as a blueprint or template
+
+14.docker run -it ubuntu bash
+
+15.apt-get update //updating ubuntu container OS
+
+16.ctrl p Ctrl q -- exit will kill the container
+
+17.docker container stop <id>
+
+18. docker images (locally stored)
+
+19. docker pull alpine:3.6(it went to dockerhub to get image)
+docker images will show alpine(OS small)
+
+//will also show image id in SHA
+20. docker images --no-trunc
+
+21. docker images --filter=reference="alpine"
+
+22. docker inspect alpine:3.6
+
+23.docker inspect ubuntu -- will have layers multiple or single
+
+--CREATE new image from runnign container
+ps -a 
+24. docker commit 9ba ubuntu:new
+
+--want to create tar file from a running container
+--want to upload to dockerhub or just a zip - admin can create a image file
+
+docker ps
+docker export 4e66dc40d04f > ubuntu.tar
+ls -l should see tar file
+
+want to commit this tar as a new image locally
+docker import - myubuntu < ubuntu.tar
+
+
+docker pull nginx
+docker save -o mynginx.tar nginx(IMAGE ONLY) send to developers
+
+--remove images from local repo
+docker rmi nginx
+docker images -- no more nginx
+
+--create images from tar file from nginx image
+docker load < mynginx.tar
+
+dockerhub -- push image to dockerhub
+dockerhub login
+need to tag the image before uploading
