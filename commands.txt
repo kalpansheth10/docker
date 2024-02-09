@@ -113,3 +113,8 @@ docker load < mynginx.tar
 dockerhub -- push image to dockerhub
 dockerhub login
 need to tag the image before uploading
+
+//expose ports
+ docker run --name web1 -dit -p 8080:80 nginx
+go to 20.115.83.244:8080
+//should see nginx welcome page
